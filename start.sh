@@ -5,11 +5,23 @@
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
+# Apresentação projeto python
+[ $(which figlet) ] || sudo apt-get install figlet
+echo -e "\033[1;39;104m $(figlet Projeto Python) \033[0m \n"
+echo -e "\033[1;93m"
+echo -e 'Olá, qual é o nome do projeto? Favor usar - ao invés de _. \033[m'
+
 # Aqui é solicitado o nome do projeto
-echo Olá, qual é o nome do projeto? Favor usar - ao invés de _.
 read -p 'Nome do Projeto: ' projeto
 
-echo Legal iniciar o projeto $projeto
+
+echo -e "\n\033[1;30;103m\U26A0 Atenção \U26A0 \033[m"
+echo -e "\033[1;39;41m"
+echo -e "Caso exista um diretório com o mesmo nome do projeto, este será removido.\033[m"
+
+echo -e "\033[1;94m"
+echo -e "\U1F60E Legal! Iniciando o projeto\033[m \033[1;3m $projeto \033[m"
+sleep 5
 
 # Nome do diretório que será criado pelo poetry
 # e que vamos usar mais a frente
@@ -28,13 +40,18 @@ sudo apt-get update > /dev/null & wait
 [ $(which ignr) ] || pip install ignr
 
 # Aqui inicia o projeto
-echo Iniciando o projeto
+echo -e "\033[1m \n\n"
+echo -e "Terminando as validações e iniciando o projeto \U1F60E \033[0m"
+
+# removendo diretório caso exista
+rm -rf $projeto
 poetry new $projeto
 
 # Acessa o diretório criado para iniciar o ambiente virtual
 cd $projeto
 path=$(pwd)
-echo 'Acessando o diretório do projeto: '$path
+echo -e "\033[1m \n"
+echo 'Acessando o diretório do projeto: \033[0m'$path
 # Inicia o ambiente virtual
 poetry shell & wait >> /dev/null
 #source $(poetry env info --path)/bin/activate
@@ -51,7 +68,7 @@ if [[ $isgit == 'y' ]]; then
 fi
 
 #Criando o ambiente de dev
-poetry add --group dev blue
+poetry add --group dev ruff
 poetry add --group dev isort
 poetry add --group dev pytest
 poetry add --group dev pytest-cov
@@ -74,10 +91,20 @@ fi
 #ajustando o tema e as configurações do mkdocs
 mkdocs new .
 mkdir ./docs/assets
+touch ./docs/assets/logo.png
 mkdir ./docs/stylesheets
 mkdir ./docs/api
 touch ./docs/api/sua_api.md
 touch ./docs/stylesheets/extra.css
+
+# Inicias do projeto para o logo
+iniciais=$(echo $projeto | sed "s/-/ /g" | awk '{for(i=1;i<=NF;i++)print substr($i,1,1)}' | tr -d '\n')
+
+# Verifica se o convert está instalado e cria o logo
+if [ $(which convert) ]; then
+    convert -size 100x100 xc:transparent -font Ubuntu -pointsize 72 -gravity center -draw "text 0,0 '$iniciais'" ./docs/assets/logo.png >> /dev/null
+fi
+
 echo 'site_name: '$projeto > mkdocs.yml
 if [[ $isgit == 'y' ]]; then
     repo_url=$(git config --get remote.origin.url)
@@ -113,6 +140,12 @@ echo '
 pythonpath = "."
 addopts = "--doctest-modules"' >> pyproject.toml
 
+#configurando o ruff
+echo '
+[tool.ruff]
+line_length = 79
+exclude = [".venv", "migrations"]' >> pyproject.toml
+
 #configurando o isort para trabalhar com o blue
 echo '
 [tool.isort]
@@ -122,7 +155,7 @@ line_length = 79' >> pyproject.toml
 #criando tasks do taskipy
 printf '
 [tool.taskipy.tasks]
-lint = "blue --check --diff . && isort --check --diff ."
+lint = "ruff --check --diff . && isort --check --diff ."
 docs = "mkdocs serve"
 pre_test = "task lint"
 test = "pytest -s -x --cov=%s -vv"
