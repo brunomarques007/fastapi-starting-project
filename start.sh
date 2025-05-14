@@ -48,7 +48,7 @@ function criar_estrutura_projeto() {
   rm -rf "$projeto"
   poetry new --flat "$projeto"
   pushd "$projeto" > /dev/null
-  poetry python install "$python_version"
+  poetry python install "$python_version" --reinstall
   poetry env use "$python_version"
   poetry add fastapi[standard]
   poetry install
@@ -79,7 +79,7 @@ function instalar_dependencias_python() {
 }
 
 function configurar_documentacao() {
-  mkdocs new .
+  poetry run mkdocs new .
   mkdir -p ./docs/assets ./docs/stylesheets ./docs/api
   touch ./docs/assets/logo.png ./docs/stylesheets/extra.css ./docs/api/$name_api.md
   echo "::: main" > ./docs/api/$name_api.md
