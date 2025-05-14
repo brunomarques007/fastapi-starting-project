@@ -48,7 +48,10 @@ function criar_estrutura_projeto() {
   rm -rf "$projeto"
   poetry new --flat "$projeto"
   pushd "$projeto" > /dev/null
+  poetry python install "$python_version"
   poetry env use "$python_version"
+  poetry add fastapi[standard]
+  poetry install
 }
 
 function configurar_git() {
@@ -120,7 +123,7 @@ EOF
 
 function gerar_main_py() {
   mkdir -p ./$name_api
-  cat <<EOF > ./$name_api/main.py
+  cat <<EOF > ./$name_api/app.py
 """$descricao"""
 import json
 import os
@@ -167,7 +170,7 @@ quote-style = "double"
 [tool.taskipy.tasks]
 lint = "ruff check ."
 format = "ruff format ."
-run = "fastapi dev $name_api/main.py"
+run = "fastapi dev $name_api/app.py"
 docs = "mkdocs serve"
 pre_format = "ruff check --fix ."
 pre_test = "task lint"
