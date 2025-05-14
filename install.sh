@@ -3,8 +3,6 @@
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
-# Esse script é para incluir o arquivo start.sh no alias do seu sistema
-
 pwd=$(pwd)
 alias_path="$HOME/.bash_aliases"
 alias_name="start_fastapi"
