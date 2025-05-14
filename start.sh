@@ -68,7 +68,7 @@ function configurar_git() {
 }
 
 function instalar_dependencias_python() {
-  poetry add --group dev ruff pytest pytest-cov pytest-blue taskipy
+  poetry add --group dev ruff pytest pytest-cov pytest-blue "taskipy@^1.14.1" --python ">=3.6,<4.0"
   poetry add --group doc mkdocs mkdocs-material mkdocstrings mkdocstrings-python
 
   if [[ "$isgit" == "y" ]]; then
