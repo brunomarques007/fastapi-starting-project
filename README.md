@@ -8,41 +8,38 @@ O Projeto Init Python é um script que visa auxiliar na inicialização de um pr
 Para a instalação deste script é necessário que você tenha o python3 e o git instalados.
 
 
-Após fazer o clone do repositório, altera a permissão do script para executavel.
+Após fazer o clone do repositório, você pode instalar o script nos seus alias para facilitar a execução.
+
 ```bash
-chmod +x start.sh
+./install.sh
 ```
 
-Agora execute o script no diretório em que pretende criar o projeto.
+Caso tenha executado o comando anterior, reinicie o terminal para recarregar os alias. Execute o script no diretório em que pretende criar o projeto.
 
 ```bash
-./start.sh
-
-ou
-
-bash start.sh
+start_fastapi
 ```
 
 ## Documentação
 
 #### Dados sobre o projeto
 
-O projeto é baseado em **Poetry** e **FastAPI**, os testes são gerados pelo **pytest**, a documentação é gerada de forma automatizada com o **mkdos**, o lint é feito pelo **ruff** + **isort** e as tarefas do projeto são criadas com o **taskpy**. Além disso você já pode criar também o seu push inicial do projeto para o git se o mesmo for habilitado ao rodar o script.
+O projeto é baseado em **Poetry** e **FastAPI**, os testes são gerados pelo **pytest**, a documentação é gerada de forma automatizada com o **mkdocs**, o lint é feito pelo **ruff** + **isort** e as tarefas do projeto são criadas com o **taskpy**. Além disso você já pode criar também o seu push inicial do projeto para o git se o mesmo for habilitado ao rodar o script.
 
 ### Bibliotecas Utilizadas
 
 Versionamento:
- - Git
+ - git
  - gh
 
 Python:
- - Poetry
+ - poetry
+ - poetry-plugin-shell
  - pipx
  - ignr
 
 Dev:
  - ruff
- - isort
  - pytest
  - pytest-cov
  - pytest-blue

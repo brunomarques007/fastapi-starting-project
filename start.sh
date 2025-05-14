@@ -82,7 +82,7 @@ function configurar_documentacao() {
   poetry run mkdocs new .
   mkdir -p ./docs/assets ./docs/stylesheets ./docs/api
   touch ./docs/assets/logo.png ./docs/stylesheets/extra.css ./docs/api/$name_api.md
-  echo "::: main" > ./docs/api/$name_api.md
+  echo "::: app" > ./docs/api/$name_api.md
 
   iniciais=$(echo "$projeto" | sed "s/-/ /g" | awk '{for(i=1;i<=NF;i++)print substr($i,1,1)}' | tr -d '\n')
   if command -v convert >/dev/null; then
@@ -137,6 +137,7 @@ app = FastAPI(
 
 @app.get("/healthcheck")
 async def healthcheck():
+    """Verifica se a API está em execução."""
     return Response(
         content=json.dumps({
             "status": "ok",
@@ -179,13 +180,12 @@ post_test = "coverage html"
 EOF
 }
 
-function exportar_requisitos() {
-  poetry export --without-hashes --with dev -f requirements.txt -o requirements.txt
-  if [[ "$isgit" == "y" ]]; then
-    git add -p
-    git commit -m "configuração das ferramentas de desenvolvimento"
-    git push
-  fi
+function finalizar_script() {
+  echo -e "\n\033[1;30;103m\u2705 Projeto criado com sucesso! \u2705 \033[m"
+  echo -e "\033[1;93mPara iniciar o projeto, execute: \033[m"
+  echo -e "cd $projeto && poetry shell && task run"
+  echo -e "Para acessar a documentação, execute:"
+  echo -e "mkdocs serve"
 }
 
 ### Execução do Script ###
@@ -199,7 +199,7 @@ instalar_dependencias_python
 gerar_main_py
 configurar_documentacao
 configurar_pyproject
-exportar_requisitos
+finalizar_script
 
 popd > /dev/null
 exit 0
